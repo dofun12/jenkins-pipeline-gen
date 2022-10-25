@@ -20,7 +20,7 @@ timestamps {
                stage ('${env.STAGE_TWO}') {
                    dir("${env.PROJECT_NAME}"){
                        // Maven build step
-                       withMaven(maven: "Maven 3.8.6", jdk: 'Java Correto 17') {
+                       withMaven(maven: "${global.maven}", jdk: '${global.jdk}') {
                            pomversion = sh "mvn help:evaluate -Dexpression=project.version -q -DforceStdout"
                            echo "$pomversion"
                            if(isUnix()) {

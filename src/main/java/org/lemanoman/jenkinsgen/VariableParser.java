@@ -24,7 +24,7 @@ public class VariableParser {
     }
 
     private VariableParser(String line){
-        Pattern pattern = Pattern.compile("\\$\\{(.*)\\}");
+        Pattern pattern = Pattern.compile("\\$\\{(.*?)\\}");
         Matcher matcher = pattern.matcher(line);
         this.oldValue = line;
         if(matcher.find()) {

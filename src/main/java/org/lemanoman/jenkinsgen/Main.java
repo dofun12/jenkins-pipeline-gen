@@ -1,7 +1,5 @@
 package org.lemanoman.jenkinsgen;
 
-import org.yaml.snakeyaml.Yaml;
-
 import java.io.*;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -13,29 +11,45 @@ public class Main {
         System.out.println("foi carai");
         new Main().run();
     }
+    private Map<String, Schema> templates = null;
+    private Map<String, Pipeline> pipelines = null;
 
     public Main() {
 
     }
 
     public void run() {
-        loadTemplates();
+        this.templates = loadTemplates("./test-data/templates");
+        this.pipelines = loadPipelines("./test-data/pipelines");
+
+        final Pipeline pipeline = this.pipelines.get("videoviz");
+        Schema schema = this.templates.get(pipeline.getTemplate());
+        schema.fillTemplate(pipeline.getVariables());
     }
+
     public void parseYML(File file){
 
     }
-    public void loadTemplates(){
-        List<File> files = getFiles(new File("C:\\Users\\kvnsu\\IdeaProjects\\jenkins-pipeline-gen\\src\\main\\resources\\test-data\\templates"), ".yml");
-        for(File file: files){
-            Schema schema = new Schema(file);
-            Map<String, String> appVars = new HashMap<>();
-            appVars.put("env.BRANCH", "master");
-            appVars.put("project_name", "meuprojeto");
-            appVars.put("env.PROJECT_NAME", "${project_name}");
-            appVars.put("env.STAGE_ONE", "OPAaaaa carai");
-            schema.fillTemplate(appVars);
 
+    private Map<String, Pipeline> loadPipelines(String pipelinesPath){
+        HashMap<String, Pipeline> tmpPipelines = new HashMap<>();
+        List<File> files = getFiles(new File(pipelinesPath), ".yml");
+        for(File file: files){
+            final Pipeline pipeline = Pipeline.load(file);
+            tmpPipelines.put(pipeline.getName(), pipeline);
         }
+        return tmpPipelines;
+
+    }
+
+    public Map<String, Schema> loadTemplates(String templatesPath){
+        Map<String, Schema> schemaMap = new HashMap<>();
+        List<File> files = getFiles(new File(templatesPath), ".yml");
+        for(File file: files){
+            final Schema schema = new Schema(file);
+            schemaMap.put(schema.getName(), schema);
+        }
+        return schemaMap;
     }
 
     private ArrayList<File> getFiles(File dir, String suffix) {

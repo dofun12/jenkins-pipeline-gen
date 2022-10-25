@@ -1,0 +1,19 @@
+name: java-pipelines
+main-template: schema.template
+local:
+  variables:
+    - env.BRANCH:
+       default: '${project.branch}'
+    - env.GIT_REPO:
+       default: '${project.repo}'
+    - env.PROJECT_NAME:
+       default: '${project.name}'
+    - env.STAGE_ONE:
+       default: 'Checkout JAR'
+    - env.STAGE_TWO:
+        default: 'Build JAR'
+    - env.STAGE_THREE:
+        default: 'Deploy to Nexus3'
+global: "file://../../global.yml"
+
+

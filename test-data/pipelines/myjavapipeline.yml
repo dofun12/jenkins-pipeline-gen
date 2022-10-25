@@ -1,0 +1,10 @@
+project:
+  name: 'videoviz'
+  repo: 'http://gitasdajskdasdh'
+  version: '1.0'
+  branch: 'master'
+template: java-pipelines
+variables:
+  - env.BRANCH: '${project.branch}'
+  - env.GIT_REPO: 'http://gitasdajskdasdh'
+  - env.PROJECT_NAME: '${project.name}'
