@@ -1,0 +1,39 @@
+    // Powered by Infostretch
+
+timestamps {
+
+        node () {
+
+            stage ('Checkout GUI') {
+                 checkout([$class: 'GitSCM',
+                              branches: [[name: '*/master']],
+                              doGenerateSubmoduleConfigurations: false,
+                              extensions: [[$class: 'RelativeTargetDirectory',
+                                 relativeTargetDir: 'jenkins-pipelines']],
+                              submoduleCfg: [],
+                              userRemoteConfigs: [[credentialsId: 'jenkins-pipeline',
+                              url: 'git@github.com:dofun12/jenkins-pipelines.git']]]         )
+            }
+            stage ('Checkout Project') {
+                dir('jenkins-pipelines/pipelines/universal-store-api/latest'){
+                    checkout([$class: 'GitSCM',
+                     branches: [[name: '*/master']],
+                     doGenerateSubmoduleConfigurations: false,
+                     extensions: [[$class: 'RelativeTargetDirectory',
+                        relativeTargetDir: 'universal-store-api']],
+                     submoduleCfg: [],
+                     userRemoteConfigs: [[credentialsId: '',
+                     url: 'https://github.com/dofun12/universal-store-api.git']]])
+                }
+            }
+            stage ('Deploy Docker') {
+                dir('jenkins-pipelines/pipelines/universal-store-api/latest'){
+                   sh '''
+                         docker build --rm -t lemanoman/universal-store-api:latest -f python-build/Dockerfile .
+                         docker login -u lemanoman -p2cd6432f-129a-4b73-8950-07ea75d4dd3d
+                         docker push lemanoman/universal-store-api:latest
+                      '''
+                }
+            }
+        }
+}

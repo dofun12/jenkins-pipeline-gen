@@ -1,0 +1,17 @@
+name: java-pipelines
+main-template: schema.template
+variables:
+  - env.BRANCH:
+     default: 'master'
+  - env.GIT_REPO:
+     default: none
+  - env.PROJECT_NAME:
+     default: none
+  - env.STAGE_ONE:
+     default: 'Checkout JAR'
+  - env.STAGE_TWO:
+      default: 'Build JAR'
+  - env.STAGE_THREE:
+      default: 'Deploy to Nexus3'
+
+
