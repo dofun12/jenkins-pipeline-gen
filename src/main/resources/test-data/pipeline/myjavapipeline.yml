@@ -1,6 +1,7 @@
+project:
+  name: 'mypipeline-custom'
 template: java-pipelines
-project-name: myjavapip
 variables:
   - env.BRANCH: 'master'
   - env.GIT_REPO: 'http://gitasdajskdasdh'
-  - env.PROJECT_NAME: ${project-name}
+  - env.PROJECT_NAME: ${project.name}
