@@ -2,9 +2,8 @@ package org.lemanoman.jenkinsgen;
 
 import org.yaml.snakeyaml.Yaml;
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
+import java.io.*;
+import java.nio.charset.StandardCharsets;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -92,13 +91,25 @@ public class Schema {
             }
         }
     }
+    private void writeToFile(StringBuilder builder, File outputFile){
+        FileOutputStream fos = null;
+        try {
+            fos = new FileOutputStream(outputFile);
+            DataOutputStream outStream = new DataOutputStream(new BufferedOutputStream(fos));
+            outStream.writeUTF(builder.toString());
+            outStream.close();
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
 
-    public void fillTemplate(Map<String, String> appVariables) {
+    }
+
+    public void fillTemplate(Map<String, String> appVariables, String outputPath) {
         List<String> lines = FileUtils.readFile(this.templateFile.getAbsolutePath());
         StringBuilder builder = new StringBuilder();
         for (String line : lines) {
-            if (line == null || "".equals(line)) {
-                builder.append(line);
+            if(line == null || "".equals(line)){
+                builder.append("");
                 builder.append("\n");
                 continue;
             }
@@ -113,6 +124,15 @@ public class Schema {
 
             builder.append(line);
             builder.append("\n");
+        }
+        if (outputPath != null) {
+            File outfile = new File(basePath.getParentFile(), outputPath);
+            File parentPath = outfile.getParentFile();
+            parentPath.mkdirs();
+            System.out.println("=========================================");
+            System.out.println(builder);
+            writeToFile(builder, outfile);
+
         }
         System.out.println("=========================================");
         System.out.println(builder);

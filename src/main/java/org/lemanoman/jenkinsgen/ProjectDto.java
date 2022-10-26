@@ -15,6 +15,7 @@ public class ProjectDto {
     public String getVersion() { return version; }
     public void setVersion(String value) { this.version = value; }
 
+
     public String getBranch() { return branch; }
     public void setBranch(String value) { this.branch = value; }
 }

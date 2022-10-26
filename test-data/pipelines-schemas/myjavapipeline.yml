@@ -4,6 +4,7 @@ project:
   version: '1.0'
   branch: 'master'
 template: java-pipelines
+outputPath: '../pipelines/videoviz/latest/Jenkinsfile'
 variables:
   - env.BRANCH: '${project.branch}'
   - env.GIT_REPO: 'http://gitasdajskdasdh'

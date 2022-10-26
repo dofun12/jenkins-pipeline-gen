@@ -9,6 +9,8 @@ import java.util.Map;
 
 public class Pipeline {
     private String name;
+
+    private String outputPath;
     private Map<String, String> variables;
     private String template;
 
@@ -23,6 +25,7 @@ public class Pipeline {
             this.name = pipelineDto.getProject().getName();
             this.template = pipelineDto.getTemplate();
             this.variables = loadVariables(pipelineDto);
+            this.outputPath = pipelineDto.getOutputPath();
         }catch (Exception ex){
             ex.printStackTrace();
         }
@@ -62,6 +65,14 @@ public class Pipeline {
 
     public String getTemplate() {
         return template;
+    }
+
+    public String getOutputPath() {
+        return outputPath;
+    }
+
+    public void setOutputPath(String outputPath) {
+        this.outputPath = outputPath;
     }
 
     public void setTemplate(String template) {

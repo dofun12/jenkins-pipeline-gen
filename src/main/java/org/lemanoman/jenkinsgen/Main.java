@@ -20,11 +20,11 @@ public class Main {
 
     public void run() {
         this.templates = loadTemplates("./test-data/templates");
-        this.pipelines = loadPipelines("./test-data/pipelines");
+        this.pipelines = loadPipelines("./test-data/pipelines-schemas");
 
         final Pipeline pipeline = this.pipelines.get("videoviz");
         Schema schema = this.templates.get(pipeline.getTemplate());
-        schema.fillTemplate(pipeline.getVariables());
+        schema.fillTemplate(pipeline.getVariables(), pipeline.getOutputPath());
     }
 
     public void parseYML(File file){

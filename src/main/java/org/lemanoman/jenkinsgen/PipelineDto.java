@@ -6,6 +6,8 @@ import java.util.Map;
 public class PipelineDto {
     private ProjectDto project;
     private String template;
+
+    private String outputPath;
     private List<Map<String,String>> variables;
 
     public ProjectDto getProject() {
@@ -30,5 +32,13 @@ public class PipelineDto {
 
     public void setVariables(List<Map<String, String>> variables) {
         this.variables = variables;
+    }
+
+    public String getOutputPath() {
+        return outputPath;
+    }
+
+    public void setOutputPath(String outputPath) {
+        this.outputPath = outputPath;
     }
 }
