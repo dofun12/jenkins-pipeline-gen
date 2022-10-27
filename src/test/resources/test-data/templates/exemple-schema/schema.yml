@@ -1,4 +1,4 @@
-name: java-pipelines
+name: example-template
 main-template: schema.template
 local:
   variables:

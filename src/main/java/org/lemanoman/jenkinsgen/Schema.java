@@ -91,26 +91,38 @@ public class Schema {
             }
         }
     }
-    private void writeToFile(StringBuilder builder, File outputFile){
+    private void writeToFile(String out, File outputFile){
         FileOutputStream fos = null;
         try {
             fos = new FileOutputStream(outputFile);
             DataOutputStream outStream = new DataOutputStream(new BufferedOutputStream(fos));
-            outStream.writeUTF(builder.toString());
+            outStream.writeUTF(out);
             outStream.close();
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
 
     }
+    public void fillTemplate(Map<String, String> appVariables, String outputPath){
+        String out = fillTemplate(appVariables);
+        if (outputPath != null) {
+            File outfile = new File(basePath.getParentFile(), outputPath);
+            File parentPath = outfile.getParentFile();
+            parentPath.mkdirs();
+            System.out.println("=========================================");
+            System.out.println(out);
+            writeToFile(out, outfile);
 
-    public void fillTemplate(Map<String, String> appVariables, String outputPath) {
+        }
+    }
+
+    public String fillTemplate(Map<String, String> appVariables) {
         List<String> lines = FileUtils.readFile(this.templateFile.getAbsolutePath());
         StringBuilder builder = new StringBuilder();
         for (String line : lines) {
             if(line == null || "".equals(line)){
-                builder.append("");
-                builder.append("\n");
+                builder.append(line);
+                builder.append(System.lineSeparator());
                 continue;
             }
 
@@ -123,19 +135,10 @@ public class Schema {
 
 
             builder.append(line);
-            builder.append("\n");
+            builder.append(System.lineSeparator());
         }
-        if (outputPath != null) {
-            File outfile = new File(basePath.getParentFile(), outputPath);
-            File parentPath = outfile.getParentFile();
-            parentPath.mkdirs();
-            System.out.println("=========================================");
-            System.out.println(builder);
-            writeToFile(builder, outfile);
+        return builder.toString();
 
-        }
-        System.out.println("=========================================");
-        System.out.println(builder);
     }
 
     private ParseResult parseParameter(Map<String, String> appVariables, String line, VariableParser parser) {

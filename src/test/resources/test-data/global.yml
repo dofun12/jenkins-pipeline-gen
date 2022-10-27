@@ -1,0 +1,5 @@
+variables:
+  - global.maven:
+      default: 'Maven 3.8.6'
+  - global.jdk:
+      default: 'Java Correto 17'

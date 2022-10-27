@@ -1,0 +1,44 @@
+// noinspection GroovyAssignabilityCheck
+
+${ENV_VARS}
+
+timestamps {
+
+    node () {
+                stage ('${env.STAGE_ONE}') {
+                   dir("${env.PROJECT_NAME}"){
+                       checkout([$class: "GitSCM",
+                                 branches: [[name: "*/${env.BRANCH}"]],
+                                 doGenerateSubmoduleConfigurations: false,
+                                 extensions: [[$class: 'RelativeTargetDirectory',
+                                               relativeTargetDir: ""]],
+                                 submoduleCfg: [],
+                                 userRemoteConfigs: [[credentialsId: "${env.CREDENTIAL}",
+                                                      url: "${env.GIT_REPO}"]]])
+                   }
+               }
+               stage ('${env.STAGE_TWO}') {
+                   dir("${env.PROJECT_NAME}"){
+                       // Maven build step
+                       withMaven(maven: "${global.maven}", jdk: '${global.jdk}') {
+                           pomversion = sh "mvn help:evaluate -Dexpression=project.version -q -DforceStdout"
+                           echo "$pomversion"
+                           if(isUnix()) {
+                               sh "mvn clean package -Dmaven.test.skip=true "
+                           } else {
+                               bat "mvn clean package -Dmaven.test.skip=true "
+                           }
+                       }               // Shell build step
+                   }
+               }
+               stage ('${env.STAGE_THREE}') {
+                    dir("${env.PROJECT_NAME}"){
+                        // Maven build step
+                        withMaven(maven: "Maven 3.8.6", jdk: 'Java Correto 17') {
+                            sh "mvn deploy -Dmaven.test.skip=true "
+                        }               // Shell build step
+                    }
+                }
+
+    }
+}

@@ -14,6 +14,8 @@ public class Pipeline {
     private Map<String, String> variables;
     private String template;
 
+    private String repo;
+
     public static Pipeline load(File pipelineFileYml){
         return new Pipeline(pipelineFileYml);
     }
@@ -25,6 +27,7 @@ public class Pipeline {
             this.name = pipelineDto.getProject().getName();
             this.template = pipelineDto.getTemplate();
             this.variables = loadVariables(pipelineDto);
+            this.repo = pipelineDto.getProject().getRepo();
             this.outputPath = pipelineDto.getOutputPath();
         }catch (Exception ex){
             ex.printStackTrace();
@@ -73,6 +76,14 @@ public class Pipeline {
 
     public void setOutputPath(String outputPath) {
         this.outputPath = outputPath;
+    }
+
+    public String getRepo() {
+        return repo;
+    }
+
+    public void setRepo(String repo) {
+        this.repo = repo;
     }
 
     public void setTemplate(String template) {

@@ -1,0 +1,44 @@
+// noinspection GroovyAssignabilityCheck
+
+${ENV_VARS}
+
+timestamps {
+
+    node () {
+                stage ('Checkout mynamtest JAR') {
+                   dir("mynamtest"){
+                       checkout([$class: "GitSCM",
+                                 branches: [[name: "*/master"]],
+                                 doGenerateSubmoduleConfigurations: false,
+                                 extensions: [[$class: 'RelativeTargetDirectory',
+                                               relativeTargetDir: ""]],
+                                 submoduleCfg: [],
+                                 userRemoteConfigs: [[credentialsId: "${env.CREDENTIAL}",
+                                                      url: "http://xymzaasdaskdjasldkj"]]])
+                   }
+               }
+               stage ('Build JAR With maven') {
+                   dir("mynamtest"){
+                       // Maven build step
+                       withMaven(maven: "Maven 3.8.6", jdk: 'Java Correto 17') {
+                           pomversion = sh "mvn help:evaluate -Dexpression=project.version -q -DforceStdout"
+                           echo "$pomversion"
+                           if(isUnix()) {
+                               sh "mvn clean package -Dmaven.test.skip=true "
+                           } else {
+                               bat "mvn clean package -Dmaven.test.skip=true "
+                           }
+                       }               // Shell build step
+                   }
+               }
+               stage ('Deploy to Nexus3') {
+                    dir("mynamtest"){
+                        // Maven build step
+                        withMaven(maven: "Maven 3.8.6", jdk: 'Java Correto 17') {
+                            sh "mvn deploy -Dmaven.test.skip=true "
+                        }               // Shell build step
+                    }
+                }
+
+    }
+}

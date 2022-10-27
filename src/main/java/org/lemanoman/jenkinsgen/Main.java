@@ -19,55 +19,14 @@ public class Main {
     }
 
     public void run() {
-        this.templates = loadTemplates("./test-data/templates");
-        this.pipelines = loadPipelines("./test-data/pipelines-schemas");
+        this.templates = Loader.loadTemplates("./test-data/templates");
+        this.pipelines = Loader.loadPipelines("./test-data/pipelines-schemas");
 
         final Pipeline pipeline = this.pipelines.get("videoviz");
         Schema schema = this.templates.get(pipeline.getTemplate());
         schema.fillTemplate(pipeline.getVariables(), pipeline.getOutputPath());
     }
 
-    public void parseYML(File file){
-
-    }
-
-    private Map<String, Pipeline> loadPipelines(String pipelinesPath){
-        HashMap<String, Pipeline> tmpPipelines = new HashMap<>();
-        List<File> files = getFiles(new File(pipelinesPath), ".yml");
-        for(File file: files){
-            final Pipeline pipeline = Pipeline.load(file);
-            tmpPipelines.put(pipeline.getName(), pipeline);
-        }
-        return tmpPipelines;
-
-    }
-
-    public Map<String, Schema> loadTemplates(String templatesPath){
-        Map<String, Schema> schemaMap = new HashMap<>();
-        List<File> files = getFiles(new File(templatesPath), ".yml");
-        for(File file: files){
-            final Schema schema = new Schema(file);
-            schemaMap.put(schema.getName(), schema);
-        }
-        return schemaMap;
-    }
-
-    private ArrayList<File> getFiles(File dir, String suffix) {
-        ArrayList<File> files = new ArrayList<>();
-        if (dir == null || dir.listFiles() == null) {
-            return files;
-        }
-        for (File subFile : dir.listFiles()) {
-            if (subFile.isDirectory()) {
-                files.addAll(getFiles(subFile, suffix));
-            }
-            if (!subFile.getName().endsWith(suffix)) {
-                continue;
-            }
-            files.add(subFile);
-        }
-        return files;
-    }
 
     private List<String> readFile(String filepath) {
         List<String> lines = new ArrayList<>();
