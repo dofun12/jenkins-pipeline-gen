@@ -43,7 +43,6 @@ public class TestTemplateConvert {
         String expected = FileUtils.readFileAsString("src/test/resources/test-data/expected.output");
         String out = schema.fillTemplate(pipeline.getVariables());
         Assert.assertEquals(expected, out);
-        System.out.println(out);
     }
 
     @Test
