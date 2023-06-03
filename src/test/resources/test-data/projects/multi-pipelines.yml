@@ -1,0 +1,19 @@
+project:
+  name: 'mynamtest'
+  repo: 'http://gitasdajskdasdh'
+  version: '1.0'
+  branch: 'master'
+
+pipelines:
+  - name: python-pipeline-a
+    template: java-pipelines
+    outputPath: '../test-output/test-pipeline-out-a'
+
+  - name: python-pipeline-b
+    template: third-template
+    outputPath: '../test-output/test-pipeline-out-b'
+
+variables:
+  - env.BRANCH: '${project.branch}'
+  - env.GIT_REPO: 'http://xymzaasdaskdjasldkj'
+  - env.PROJECT_NAME: '${project.name}'

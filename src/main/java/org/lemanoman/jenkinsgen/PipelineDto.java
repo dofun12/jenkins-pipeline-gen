@@ -4,17 +4,17 @@ import java.util.List;
 import java.util.Map;
 
 public class PipelineDto {
-    private ProjectDto project;
+    private ElementProjectDto project;
     private String template;
 
     private String outputPath;
     private List<Map<String,String>> variables;
 
-    public ProjectDto getProject() {
+    public ElementProjectDto getProject() {
         return project;
     }
 
-    public void setProject(ProjectDto project) {
+    public void setProject(ElementProjectDto project) {
         this.project = project;
     }
 

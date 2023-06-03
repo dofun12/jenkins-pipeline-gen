@@ -1,21 +1,34 @@
 package org.lemanoman.jenkinsgen;
 
+import java.util.List;
+import java.util.Map;
+
 public class ProjectDto {
-    private String name;
-    private String repo;
-    private String version;
-    private String branch;
+    private ElementProjectDto project;
+    private List<ProjectPipelineDto> pipelines;
+    private List<Map<String,String>> variables;
 
-    public String getName() { return name; }
-    public void setName(String value) { this.name = value; }
+    public ElementProjectDto getProject() {
+        return project;
+    }
 
-    public String getRepo() { return repo; }
-    public void setRepo(String value) { this.repo = value; }
+    public void setProject(ElementProjectDto project) {
+        this.project = project;
+    }
 
-    public String getVersion() { return version; }
-    public void setVersion(String value) { this.version = value; }
+    public List<ProjectPipelineDto> getPipelines() {
+        return pipelines;
+    }
 
+    public void setPipelines(List<ProjectPipelineDto> pipelines) {
+        this.pipelines = pipelines;
+    }
 
-    public String getBranch() { return branch; }
-    public void setBranch(String value) { this.branch = value; }
+    public List<Map<String, String>> getVariables() {
+        return variables;
+    }
+
+    public void setVariables(List<Map<String, String>> variables) {
+        this.variables = variables;
+    }
 }

@@ -29,6 +29,17 @@ public class Loader {
         return Pipeline.load(pipelineFile);
     }
 
+    public static Project loadProject(String projectPath){
+        if(projectPath==null){
+            return null;
+        }
+        File pipelineFile = new File(projectPath);
+        if(!pipelineFile.exists() || !pipelineFile.isFile()){
+            return null;
+        }
+        return Project.load(pipelineFile);
+    }
+
     public static Map<String, Schema> loadTemplates(String templatesPath) {
         Map<String, Schema> schemaMap = new HashMap<>();
         File dir = new File(templatesPath);

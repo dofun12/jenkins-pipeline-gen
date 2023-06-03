@@ -2,10 +2,7 @@ package org.lemanoman.tests.jenkinsgen;
 
 import org.junit.Assert;
 import org.junit.Test;
-import org.lemanoman.jenkinsgen.FileUtils;
-import org.lemanoman.jenkinsgen.Loader;
-import org.lemanoman.jenkinsgen.Pipeline;
-import org.lemanoman.jenkinsgen.Schema;
+import org.lemanoman.jenkinsgen.*;
 
 import java.io.File;
 import java.util.Map;
@@ -61,7 +58,13 @@ public class TestTemplateConvert {
         Assert.assertEquals(out,expected);
     }
 
+    @Test
+    public void testNewSyntax(){
+        Map<String, Schema> templates = Loader.loadTemplates("src/test/resources/test-data/templates");
 
+        Project projectPrimary = Loader.loadProject("src/test/resources/test-data/projects/multi-pipelines.yml");
+
+    }
     @Test
     public void testLoadPipelineCreateOutput(){
         Schema schemaA = Loader.loadTemplate("src/test/resources/test-data/templates/second-schema");
