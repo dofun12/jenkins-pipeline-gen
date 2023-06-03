@@ -92,14 +92,11 @@ public class Schema {
         }
     }
     private void writeToFile(String out, File outputFile){
-        FileOutputStream fos = null;
-        try {
-            fos = new FileOutputStream(outputFile);
-            DataOutputStream outStream = new DataOutputStream(new BufferedOutputStream(fos));
-            outStream.writeUTF(out);
-            outStream.close();
+        try (FileOutputStream fos = new FileOutputStream(outputFile)){
+            byte[] strToBytes = out.getBytes();
+            fos.write(strToBytes);
         } catch (Exception e) {
-            throw new RuntimeException(e);
+            e.printStackTrace();
         }
 
     }
@@ -107,6 +104,10 @@ public class Schema {
         String out = fillTemplate(appVariables);
         if (outputPath != null) {
             File outfile = new File(basePath.getParentFile(), outputPath);
+            if(!outputPath.startsWith("..")){
+                outfile = new File(outputPath);
+            }
+
             File parentPath = outfile.getParentFile();
             parentPath.mkdirs();
             System.out.println("=========================================");
@@ -148,12 +149,12 @@ public class Schema {
             String value = "";
             if (variables.containsKey(key)) {
                 value = variables.get(key);
-                System.out.println("${" + key + "} -> " + value);
+                //System.out.println("${" + key + "} -> " + value);
                 exists = true;
             }
             if (appVariables.containsKey(key)) {
                 value = appVariables.get(key);
-                System.out.println("${" + key + "} -> " + value);
+                // System.out.println("${" + key + "} -> " + value);
                 exists = true;
             }
             if (!exists) {

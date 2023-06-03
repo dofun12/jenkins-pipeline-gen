@@ -31,7 +31,9 @@ public class Loader {
 
     public static Map<String, Schema> loadTemplates(String templatesPath) {
         Map<String, Schema> schemaMap = new HashMap<>();
-        List<File> files = getFiles(new File(templatesPath), ".yml");
+        File dir = new File(templatesPath);
+        System.out.println("Loading schemas from..."+dir.getAbsolutePath());
+        List<File> files = getFiles(dir, ".yml");
         for (File file : files) {
             final Schema schema = loadTemplate(file);
             schemaMap.put(schema.getName(), schema);
@@ -42,10 +44,14 @@ public class Loader {
         if(!templateFile.exists()){
             return null;
         }
+        if(templateFile.isFile()){
+            return new Schema(templateFile);
+        }
         File[] subFiles = templateFile.listFiles();
         if(subFiles==null){
             return null;
         }
+
         for(File file: subFiles){
             if(file.isFile() && file.getName().endsWith(".yml")){
                 return new Schema(file);

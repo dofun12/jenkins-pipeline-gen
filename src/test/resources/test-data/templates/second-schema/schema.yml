@@ -1,0 +1,13 @@
+name: second-template
+main-template: schema.template
+local:
+  variables:
+    - global.testA:
+        default: 'Value A fom Schema'
+    - global.testB:
+        default: 'Value B fom Schema'
+    - global.testC:
+        default: 'Value C fom Schema'
+global: "file://../../global-test.yml"
+
+

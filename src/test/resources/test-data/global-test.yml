@@ -1,0 +1,5 @@
+variables:
+  - global.testA:
+      default: 'Value A from Global YML'
+  - global.testB:
+      default: 'Value B from Global YML'

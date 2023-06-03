@@ -1,0 +1,11 @@
+project:
+  name: 'mynamtest'
+  repo: 'http://gitasdajskdasdh'
+  version: '1.0'
+  branch: 'master'
+template: java-pipelines
+outputPath: '../test-output/test-pipeline-out'
+variables:
+  - env.BRANCH: '${project.branch}'
+  - env.GIT_REPO: 'http://xymzaasdaskdjasldkj'
+  - env.PROJECT_NAME: '${project.name}'

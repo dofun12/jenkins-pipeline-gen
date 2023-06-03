@@ -1,0 +1,11 @@
+name: third-template
+main-template: schema.template
+local:
+  variables:
+    - global.testA:
+       default: 'Third A'
+    - global.testB:
+       default: 'Third B'
+global: "file://../../global-test.yml"
+
+

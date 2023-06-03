@@ -20,7 +20,7 @@ public class TestTemplateConvert {
 
     @Test
     public void testLoadPipeline(){
-        Pipeline pipeline = Loader.loadPipeline("src/test/resources/test-data/pipelines-schemas/test-pipeline.yml");
+        Pipeline pipeline = Loader.loadPipeline("src/test/resources/test-data/pipelines-schemas/simple-pipeline.yml");
         Assert.assertNotNull(pipeline);
         Assert.assertEquals("mynamtest", pipeline.getName());
         Assert.assertEquals("http://gitasdajskdasdh", pipeline.getRepo());
@@ -37,7 +37,7 @@ public class TestTemplateConvert {
         Schema schema = Loader.loadTemplate("src/test/resources/test-data/templates/exemple-schema");
         Assert.assertNotNull(schema);
 
-        Pipeline pipeline = Loader.loadPipeline("src/test/resources/test-data/pipelines-schemas/test-pipeline.yml");
+        Pipeline pipeline = Loader.loadPipeline("src/test/resources/test-data/pipelines-schemas/simple-pipeline.yml");
         Assert.assertNotNull(pipeline);
 
         String expected = FileUtils.readFileAsString("src/test/resources/test-data/expected.output");
@@ -45,6 +45,49 @@ public class TestTemplateConvert {
         Assert.assertEquals(expected, out);
     }
 
+    @Test
+    public void testLoadPipelineAndFillGlobals(){
+        Schema schemaA = Loader.loadTemplate("src/test/resources/test-data/templates/second-schema");
+        Assert.assertNotNull(schemaA);
+
+        Pipeline pipelinePrimary = Loader.loadPipeline("src/test/resources/test-data/pipelines-schemas/test-pipeline-primary.yml");
+        Assert.assertNotNull(pipelinePrimary);
+
+        Pipeline pipelineSecondary = Loader.loadPipeline("src/test/resources/test-data/pipelines-schemas/test-pipeline-secondary.yml");
+        Assert.assertNotNull(pipelineSecondary);
+
+        String out = schemaA.fillTemplate(pipelineSecondary.getVariables());
+        String expected = FileUtils.readFileAsString("src/test/resources/test-data/expectedGlobals.output");
+        Assert.assertEquals(out,expected);
+    }
+
+
+    @Test
+    public void testLoadPipelineCreateOutput(){
+        Schema schemaA = Loader.loadTemplate("src/test/resources/test-data/templates/second-schema");
+        Assert.assertNotNull(schemaA);
+
+        Pipeline pipelinePrimary = Loader.loadPipeline("src/test/resources/test-data/pipelines-schemas/test-pipeline-primary.yml");
+        Assert.assertNotNull(pipelinePrimary);
+
+        Pipeline pipelineSecondary = Loader.loadPipeline("src/test/resources/test-data/pipelines-schemas/test-pipeline-secondary.yml");
+        Assert.assertNotNull(pipelineSecondary);
+
+
+        String generatedPath = "src/test/resources/test-data/generatedfile.output";
+        File generated = new File(generatedPath);
+        if(generated.exists()){
+            Assert.assertTrue(generated.delete());
+        }
+
+        schemaA.fillTemplate(pipelineSecondary.getVariables(), generatedPath);
+        String expected = FileUtils.readFileAsString("src/test/resources/test-data/expectedGlobals.output");
+
+        String out = FileUtils.readFileAsString(generatedPath);
+
+        Assert.assertEquals(out,expected);
+    }
+    
     @Test
     public void testLoadAndCheckVars(){
         Schema schema = Loader.loadTemplate("src/test/resources/test-data/templates/exemple-schema");

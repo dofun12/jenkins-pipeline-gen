@@ -1,0 +1,7 @@
+project:
+  name: 'Secondary project'
+  repo: 'http://gitasdajskdasdh'
+  version: '1.0'
+  branch: 'master'
+variables:
+  - global.testA: 'Sobescrevendo Value A'

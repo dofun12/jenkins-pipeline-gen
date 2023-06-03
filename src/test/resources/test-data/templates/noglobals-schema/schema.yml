@@ -1,0 +1,8 @@
+name: no-globals-template
+main-template: schema.template
+local:
+  variables:
+    - global.testA:
+       default: 'Value A fom Schema'
+    - global.testB:
+       default: 'Value B fom Schema'

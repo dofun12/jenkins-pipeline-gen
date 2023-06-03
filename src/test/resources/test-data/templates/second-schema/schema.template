@@ -1,0 +1,6 @@
+Second Template
+
+Project name: ${project.name}
+Global A -> ${global.testA}
+Global B -> ${global.testB}
+Global C -> ${global.testC}

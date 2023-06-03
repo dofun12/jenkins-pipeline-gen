@@ -37,16 +37,22 @@ public class Pipeline {
     private Map<String, String> loadVariables(PipelineDto pipelineDto){
         HashMap<String, String> tempVars = new HashMap<>();
 
+        if(pipelineDto==null|| pipelineDto.getProject()==null){
+            return new HashMap<>();
+        }
+        tempVars.put("project.name", pipelineDto.getProject().getName());
+        tempVars.put("project.version", pipelineDto.getProject().getVersion());
+        tempVars.put("project.branch", pipelineDto.getProject().getBranch());
+        tempVars.put("project.repo", pipelineDto.getProject().getRepo());
+        if(pipelineDto.getVariables()==null){
+            return tempVars;
+        }
         for(Map<String,String> varMap: pipelineDto.getVariables()){
             var setEntry = varMap.entrySet();
             for(var entry: setEntry){
                 tempVars.put(entry.getKey(), entry.getValue());
             }
         }
-        tempVars.put("project.name", pipelineDto.getProject().getName());
-        tempVars.put("project.version", pipelineDto.getProject().getVersion());
-        tempVars.put("project.branch", pipelineDto.getProject().getBranch());
-        tempVars.put("project.repo", pipelineDto.getProject().getRepo());
         return tempVars;
     }
 

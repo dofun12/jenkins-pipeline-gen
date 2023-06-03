@@ -1,0 +1,4 @@
+Template - No globals
+Project Name: ${project.name}
+${global.testA}
+${global.testB}
