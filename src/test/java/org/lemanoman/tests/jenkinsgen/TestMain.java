@@ -26,7 +26,7 @@ public class TestMain {
     @Test
     public void testRun() {
         try {
-            Main main = new Main("-t", "test-data/templates", "-p",  "./test-data/pipelines-schemas");
+            Main main = new Main("-t", "src/test/resources/test-data/templates", "-p",  "src/test/resources/test-data/pipelines-schemas");
             main.run();
         }catch (ParseException ex){
             Assert.fail();

@@ -1,0 +1,23 @@
+project:
+  name: 'mynamtest'
+  repo: 'http://gitasdajskdasdh'
+  version: '1.0'
+  branch: 'master'
+
+pipelines:
+  - name: python-pipeline-a
+    template: example-template
+    outputPath: '../test-output/multi-pipelines/test-pipeline-out-a.out'
+
+  - name: python-pipeline-b
+    template: third-template
+    outputPath: '../test-output/multi-pipelines/test-pipeline-out-b.out'
+
+  - name: python-pipeline-c
+    template: second-template
+    outputPath: '../test-output/multi-pipelines/test-pipeline-out-c.out'
+
+variables:
+  - env.BRANCH: '${project.branch}'
+  - env.GIT_REPO: 'http://xymzaasdaskdjasldkj'
+  - env.PROJECT_NAME: '${project.name}'
