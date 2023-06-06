@@ -1,9 +1,11 @@
 package org.lemanoman.jenkinsgen;
 
 import org.yaml.snakeyaml.Yaml;
+import org.yaml.snakeyaml.error.YAMLException;
 
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -16,40 +18,37 @@ public class Pipeline {
 
     private String repo;
 
-    public static Pipeline load(File pipelineFileYml){
+    public static Pipeline load(File pipelineFileYml) throws YAMLException, FileNotFoundException {
         return new Pipeline(pipelineFileYml);
     }
-    private Pipeline(File pipelineFileYml) {
+
+    private Pipeline(File pipelineFileYml) throws YAMLException, FileNotFoundException {
         Yaml yaml = new Yaml();
-        try {
-            FileInputStream fis = new FileInputStream(pipelineFileYml);
-            PipelineDto pipelineDto = yaml.loadAs(fis, PipelineDto.class);
-            this.name = pipelineDto.getProject().getName();
-            this.template = pipelineDto.getTemplate();
-            this.variables = loadVariables(pipelineDto);
-            this.repo = pipelineDto.getProject().getRepo();
-            this.outputPath = pipelineDto.getOutputPath();
-        }catch (Exception ex){
-            ex.printStackTrace();
-        }
+        FileInputStream fis = new FileInputStream(pipelineFileYml);
+        PipelineDto pipelineDto = yaml.loadAs(fis, PipelineDto.class);
+        this.name = pipelineDto.getProject().getName();
+        this.template = pipelineDto.getTemplate();
+        this.variables = loadVariables(pipelineDto);
+        this.repo = pipelineDto.getProject().getRepo();
+        this.outputPath = pipelineDto.getOutputPath();
     }
 
-    private Map<String, String> loadVariables(PipelineDto pipelineDto){
+    private Map<String, String> loadVariables(PipelineDto pipelineDto) {
         HashMap<String, String> tempVars = new HashMap<>();
 
-        if(pipelineDto==null|| pipelineDto.getProject()==null){
+        if (pipelineDto == null || pipelineDto.getProject() == null) {
             return new HashMap<>();
         }
         tempVars.put("project.name", pipelineDto.getProject().getName());
         tempVars.put("project.version", pipelineDto.getProject().getVersion());
         tempVars.put("project.branch", pipelineDto.getProject().getBranch());
         tempVars.put("project.repo", pipelineDto.getProject().getRepo());
-        if(pipelineDto.getVariables()==null){
+        if (pipelineDto.getVariables() == null) {
             return tempVars;
         }
-        for(Map<String,String> varMap: pipelineDto.getVariables()){
+        for (Map<String, String> varMap : pipelineDto.getVariables()) {
             var setEntry = varMap.entrySet();
-            for(var entry: setEntry){
+            for (var entry : setEntry) {
                 tempVars.put(entry.getKey(), entry.getValue());
             }
         }

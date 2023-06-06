@@ -63,7 +63,15 @@ public class TestTemplateConvert {
         Map<String, Schema> templates = Loader.loadTemplates("src/test/resources/test-data/templates");
 
         Project projectPrimary = Loader.loadProject("src/test/resources/test-data/projects/multi-pipelines.yml");
-
+        for(ProjectPipelineDto pipelineDto: projectPrimary.getPipelines()){
+            Schema schema = templates.get(pipelineDto.getTemplate());
+            if(schema==null){
+                continue;
+            }
+            schema.fillTemplate(projectPrimary.getVariables(), pipelineDto.getOutputPath());
+            File generatedDir = new File(pipelineDto.getOutputPath().replaceAll("\\.\\.","src/test/resources/test-data"));
+            Assert.assertTrue(generatedDir.exists());
+        }
     }
     @Test
     public void testLoadPipelineCreateOutput(){

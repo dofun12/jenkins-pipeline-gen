@@ -1,6 +1,9 @@
 package org.lemanoman.jenkinsgen;
 
+import org.yaml.snakeyaml.error.YAMLException;
+
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -12,7 +15,15 @@ public class Loader {
         HashMap<String, Pipeline> tmpPipelines = new HashMap<>();
         List<File> files = getFiles(new File(pipelinesPath), ".yml");
         for (File file : files) {
-            final Pipeline pipeline = Pipeline.load(file);
+            Pipeline pipeline = null;
+            try {
+                pipeline = Pipeline.load(file);
+            }catch (YAMLException e){
+                continue;
+            }catch (FileNotFoundException fnf){
+                fnf.printStackTrace();
+                continue;
+            }
             tmpPipelines.put(pipeline.getName(), pipeline);
         }
         return tmpPipelines;
@@ -26,7 +37,11 @@ public class Loader {
         if(!pipelineFile.exists() || !pipelineFile.isFile()){
             return null;
         }
-        return Pipeline.load(pipelineFile);
+        try {
+            return Pipeline.load(pipelineFile);
+        } catch (FileNotFoundException|YAMLException e) {
+            return null;
+        }
     }
 
     public static Project loadProject(String projectPath){
