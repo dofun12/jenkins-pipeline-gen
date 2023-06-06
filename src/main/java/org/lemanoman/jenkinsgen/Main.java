@@ -10,6 +10,7 @@ import java.util.Map;
 public class Main {
     private String templatePath;
     private String projectPath;
+
     public static void main(String... args) {
         try {
             Main main = new Main(args);
@@ -23,6 +24,8 @@ public class Main {
 
     private Map<String, Schema> templates = null;
     private Map<String, Pipeline> pipelines = null;
+
+    private Map<String, Project> projects = null;
 
     public Main(String... args) throws ParseException {
         Options options = new Options();
@@ -66,28 +69,53 @@ public class Main {
         //"./test-data/templates"
         this.templates = Loader.loadTemplates(this.templatePath);
         this.pipelines = Loader.loadPipelines(this.projectPath);
+        this.projects = Loader.loadProjects(this.projectPath);
 
-        if(this.templates == null){
+        if (this.templates == null) {
             System.out.println("No templates found");
             return;
         }
 
-        for(Map.Entry<String, Pipeline> entry: pipelines.entrySet()){
+        for (Map.Entry<String, Pipeline> entry : pipelines.entrySet()) {
             final Pipeline pipeline = entry.getValue();
-            if(pipeline==null){
+            if (pipeline == null) {
                 continue;
             }
-            if(pipeline.getTemplate()==null || pipeline.getTemplate().isEmpty()){
+            if (pipeline.getTemplate() == null || pipeline.getTemplate().isEmpty()) {
                 continue;
             }
-            if(pipeline.getOutputPath()==null|| pipeline.getOutputPath().isEmpty() ){
+            if (pipeline.getOutputPath() == null || pipeline.getOutputPath().isEmpty()) {
                 continue;
             }
             Schema schema = templates.get(pipeline.getTemplate());
-            if(schema==null){
-               continue;
+            if (schema == null) {
+                continue;
             }
             schema.fillTemplate(pipeline.getVariables(), pipeline.getOutputPath());
+        }
+
+        for (Map.Entry<String, Project> entry : projects.entrySet()) {
+            final Project project = entry.getValue();
+            if (project == null) {
+                continue;
+            }
+            if(project.getPipelines()==null || project.getPipelines().isEmpty()){
+                continue;
+            }
+            for (ProjectPipelineDto pipeline : project.getPipelines()) {
+
+                if (pipeline.getTemplate() == null || pipeline.getTemplate().isEmpty()) {
+                    continue;
+                }
+                if (pipeline.getOutputPath() == null || pipeline.getOutputPath().isEmpty()) {
+                    continue;
+                }
+                Schema schema = templates.get(pipeline.getTemplate());
+                if (schema == null) {
+                    continue;
+                }
+                schema.fillTemplate(project.getVariables(), pipeline.getOutputPath());
+            }
         }
     }
 

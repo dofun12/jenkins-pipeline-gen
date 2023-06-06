@@ -29,6 +29,25 @@ public class Loader {
         return tmpPipelines;
 
     }
+
+    public static Map<String, Project> loadProjects(String pipelinesPath) {
+        HashMap<String, Project> tmpPipelines = new HashMap<>();
+        List<File> files = getFiles(new File(pipelinesPath), ".yml");
+        for (File file : files) {
+            Project pipeline = null;
+            try {
+                pipeline = Project.load(file);
+            }catch (YAMLException e){
+                continue;
+            }catch (FileNotFoundException fnf){
+                fnf.printStackTrace();
+                continue;
+            }
+            tmpPipelines.put(pipeline.getName(), pipeline);
+        }
+        return tmpPipelines;
+
+    }
     public static Pipeline loadPipeline(String pipelinePath){
         if(pipelinePath==null){
             return null;
@@ -52,7 +71,11 @@ public class Loader {
         if(!pipelineFile.exists() || !pipelineFile.isFile()){
             return null;
         }
-        return Project.load(pipelineFile);
+        try {
+            return Project.load(pipelineFile);
+        } catch (FileNotFoundException|YAMLException e) {
+            return null;
+        }
     }
 
     public static Map<String, Schema> loadTemplates(String templatesPath) {
