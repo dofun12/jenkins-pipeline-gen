@@ -11,6 +11,8 @@ public class Main {
     private String templatePath;
     private String projectPath;
 
+    private String outputPath;
+
     public static void main(String... args) {
         try {
             Main main = new Main(args);
@@ -31,12 +33,18 @@ public class Main {
         Options options = new Options();
         options.addOption("u", false, "Update templates")
                 .addRequiredOption("t", "template-path", true, "Set the templates path")
-                .addRequiredOption("p", "project-path", true, "Set the projects path");
+                .addRequiredOption("p", "project-path", true, "Set the projects path")
+                .addOption("o", "output-path", true, "Set the projects out path");
 
         CommandLineParser parser = new DefaultParser();
         CommandLine line = parser.parse(options, args);
         String templatePath = line.getOptionValue("t");
         String projectsPath = line.getOptionValue("p");
+
+        outputPath = ".";
+        if(line.hasOption("o")){
+             outputPath = line.getOptionValue("o");
+        }
 
         if (templatePath == null || projectsPath == null) {
             throw new ParseException("template path and project path is required");
@@ -91,7 +99,7 @@ public class Main {
             if (schema == null) {
                 continue;
             }
-            schema.fillTemplate(pipeline.getVariables(), pipeline.getOutputPath());
+            schema.fillTemplate(pipeline.getVariables(), pipeline.getOutputPath(), outputPath);
         }
 
         for (Map.Entry<String, Project> entry : projects.entrySet()) {
@@ -114,7 +122,7 @@ public class Main {
                 if (schema == null) {
                     continue;
                 }
-                schema.fillTemplate(project.getVariables(), pipeline.getOutputPath());
+                schema.fillTemplate(project.getVariables(), pipeline.getOutputPath(), outputPath);
             }
         }
     }

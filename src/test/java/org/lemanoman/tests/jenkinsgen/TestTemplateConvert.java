@@ -85,18 +85,18 @@ public class TestTemplateConvert {
         Assert.assertNotNull(pipelineSecondary);
 
 
-        String generatedPath = "src/test/resources/test-data/generatedfile.output";
+        String generatedPath = "generatedfile.output";
         File generated = new File(generatedPath);
         if(generated.exists()){
             Assert.assertTrue(generated.delete());
         }
-
-        schemaA.fillTemplate(pipelineSecondary.getVariables(), generatedPath);
+        String basePath = "src/test/resources/test-data";
+        schemaA.fillTemplate(pipelineSecondary.getVariables(), generatedPath, basePath);
         String expected = FileUtils.readFileAsString("src/test/resources/test-data/expectedGlobals.output");
 
-        String out = FileUtils.readFileAsString(generatedPath);
+        String out = FileUtils.readFileAsString(new File(basePath, generatedPath).getAbsolutePath());
 
-        Assert.assertEquals(out,expected);
+        Assert.assertEquals(expected, out);
     }
     
     @Test

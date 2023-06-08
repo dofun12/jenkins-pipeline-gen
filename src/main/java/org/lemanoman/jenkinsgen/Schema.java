@@ -7,6 +7,7 @@ import java.nio.charset.StandardCharsets;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -91,8 +92,9 @@ public class Schema {
             }
         }
     }
-    private void writeToFile(String out, File outputFile){
-        try (FileOutputStream fos = new FileOutputStream(outputFile)){
+
+    private void writeToFile(String out, File outputFile) {
+        try (FileOutputStream fos = new FileOutputStream(outputFile)) {
             byte[] strToBytes = out.getBytes();
             fos.write(strToBytes);
         } catch (Exception e) {
@@ -100,28 +102,34 @@ public class Schema {
         }
 
     }
-    public void fillTemplate(Map<String, String> appVariables, String outputPath){
+
+    public void fillTemplate(Map<String, String> appVariables, String outputPath) {
+        fillTemplate(appVariables, outputPath, basePath.getParentFile().getAbsolutePath());
+    }
+
+    public void fillTemplate(Map<String, String> appVariables, String outputPath, String baseOutput) {
         String out = fillTemplate(appVariables);
-        if (outputPath != null) {
-            File outfile = new File(basePath.getParentFile(), outputPath);
-            if(!outputPath.startsWith("..")){
-                outfile = new File(outputPath);
-            }
-
-            File parentPath = outfile.getParentFile();
-            parentPath.mkdirs();
-            System.out.println("=========================================");
-            System.out.println(out);
-            writeToFile(out, outfile);
-
+        if (outputPath == null) {
+            return;
         }
+        File childDir = new File(baseOutput, outputPath).getParentFile();
+        childDir.mkdirs();
+
+        File outfile = new File(baseOutput, outputPath);
+
+
+        System.out.println("=========================================");
+        System.out.println(out);
+        writeToFile(out, outfile);
+
+
     }
 
     public String fillTemplate(Map<String, String> appVariables) {
         List<String> lines = FileUtils.readFile(this.templateFile.getAbsolutePath());
         StringBuilder builder = new StringBuilder();
         for (String line : lines) {
-            if(line == null || "".equals(line)){
+            if (line == null || "".equals(line)) {
                 builder.append(line);
                 builder.append(System.lineSeparator());
                 continue;

@@ -1,0 +1,11 @@
+project:
+  name: 'videoviz-two'
+  repo: 'http://gitasdajskdasdh'
+  version: '1.0'
+  branch: 'master'
+template: example-template
+outputPath: 'pipelines/videoviz-two/latest/Jenkinsfile'
+variables:
+  - env.BRANCH: '${project.branch}'
+  - env.GIT_REPO: 'http://gitasdajskdasdh'
+  - env.PROJECT_NAME: '${project.name}'
